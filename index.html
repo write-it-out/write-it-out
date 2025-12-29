@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Write It Out</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #2b2d42, #0b1020);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #f7f7ff;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(10, 14, 30, 0.9);
+      border-radius: 18px;
+      padding: 20px 22px 18px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 800px) {
+      .app {
+        grid-template-columns: 1fr;
+        max-height: none;
+      }
+    }
+
+    .left, .right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #bfc4ff;
+      line-height: 1.4;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(131, 153, 255, 0.12);
+      color: #c4cbff;
+      margin-top: 6px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #99ffcc;
+    }
+
+    textarea {
+      margin-top: 8px;
+      width: 100%;
+      min-height: 160px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(8, 9, 20, 0.95);
+      padding: 10px 12px;
+      resize: vertical;
+      color: #f5f5ff;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    textarea::placeholder {
+      color: #8086aa;
+    }
+
+    textarea:focus {
+      border-color: #9f9dff;
+      box-shadow: 0 0 0 1px rgba(166, 163, 255, 0.7);
+      background: rgba(14, 16, 35, 1);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    select {
+      background: rgba(12, 16, 40, 0.95);
+      color: #e9ebff;
+      border: 1px solid rgba(255, 255, 255, 0.17);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      outline: none;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #8f8dff, #ff9ee2);
+      color: #11111b;
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 26px rgba(0, 0, 0, 0.6);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .secondary-btn {
+      background: rgba(18, 22, 50, 0.95);
+      color: #d1d4ff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .secondary-btn:hover {
+      background: rgba(28, 32, 64, 1);
+    }
+
+    .support-box {
+      margin-top: 4px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: radial-gradient(circle at left, rgba(159, 157, 255, 0.26), rgba(7, 8, 20, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .support-label {
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+
+    .support-text {
+      color: #f7f7ff;
+    }
+
+    .support-text span {
+      opacity: 0.95;
+    }
+
+    .entries-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .entries-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .entries-header small {
+      font-size: 0.7rem;
+      color: #a4aadf;
+    }
+
+    .entries {
+      margin-top: 6px;
+      padding: 8px;
+      border-radius: 14px;
+      background: radial-gradient(circle at top right, rgba(255, 158, 226, 0.2), rgba(8, 10, 26, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      max-height: 260px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(160, 162, 255, 0.6) transparent;
+    }
+
+    .entries::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .entries::-webkit-scrollbar-thumb {
+      background: rgba(160, 162, 255, 0.7);
+      border-radius: 999px;
+    }
+
+    .empty-state {
+      font-size: 0.8rem;
+      color: #c0c3f3;
+      opacity: 0.8;
+      padding: 4px;
+    }
+
+    .entry {
+      padding: 7px 8px;
+      border-radius: 10px;
+      background: rgba(7, 9, 25, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+
+    .entry-date {
+      font-size: 0.72rem;
+      color: #aeb4ff;
+      opacity: 0.95;
+    }
+
+    .entry-tag {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(159, 157, 255, 0.8);
+      color: #e5e5ff;
+      background: rgba(159, 157, 255, 0.08);
+      white-space: nowrap;
+    }
+
+    .entry-text {
+      color: #f7f7ff;
+      opacity: 0.9;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .tiny-note {
+      font-size: 0.65rem;
+      color: #9ea4d9;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .danger-note {
+      font-size: 0.7rem;
+      color: #ffc3c3;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .helpline-note {
+      font-size: 1rem;
+      color: #ffb3b3;
+      margin-top: 4px;
+      line-height: 1.4;
+      font-weight: bold;
+    }
+
+    .danger-note strong {
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- LEFT SIDE: WRITE -->
+    <div class="left">
+      <div>
+        <div class="title">Write It Out</div>
+        <p class="subtitle">
+          A quiet space just for you. Nothing here is sent anywhere — it stays on this device only.
+        </p>
+        <div class="pill">
+          <div class="pill-dot"></div>
+          Offline • No accounts • Just you and your thoughts
+        </div>
+      </div>
+
+      <div>
+        <label for="mood" class="subtitle" style="font-size: 0.8rem;">How are you feeling right now?</label>
+        <div class="controls">
+          <select id="mood">
+            <option value="">No label</option>
+            <option value="Overwhelmed">Overwhelmed</option>
+            <option value="Sad">Sad</option>
+            <option value="Angry">Angry</option>
+            <option value="Stressed">Stressed</option>
+            <option value="Lonely">Lonely</option>
+            <option value="Confused">Confused</option>
+            <option value="Okay-ish">Okay-ish</option>
+            <option value="Grateful">Grateful</option>
+          </select>
+
+          <button id="saveBtn" class="primary-btn">
+            ✍️ Write it down
+          </button>
+        </div>
+
+        <textarea id="entryText" placeholder="Type whatever's on your mind. It doesn't need to sound smart or make sense. Just get it out."></textarea>
+      </div>
+
+      <div class="support-box" id="supportBox">
+        <div class="support-label">Gentle reminder</div>
+        <div class="support-text" id="supportText">
+          You don’t have to fix everything tonight. Writing it out is already you taking care of yourself a bit. <span>One step at a time is enough.</span>
+        </div>
+      </div>
+
+      <p class="danger-note">
+        If you ever feel like you might hurt yourself or someone else, <strong>this page isn’t enough.</strong><br />
+        Talk to a trusted adult or contact local emergency services or a crisis helpline straight away.
+      </p>
+      <p class="helpline-note">
+        For immediate help, consider reaching out to a crisis helpline such as:<br />
+        <a href="tel:+0800 1111">Childline (UK)</a><br>
+        <a href="tel:+111"> NHS (Select option 2)</a><br>
+        <a href="sms:85258">Text SHOUT to contact Shout textline</a><br>
+    </div>
+
+    <!-- RIGHT SIDE: ENTRIES -->
+    <div class="right">
+      <div class="entries-header">
+        <div>
+          <h2>Your previous entries</h2>
+          <small>Saved on this device only • You can clear them anytime</small>
+        </div>
+        <button id="clearBtn" class="secondary-btn">
+          🗑 Clear all
+        </button>
+      </div>
+
+      <div id="entries" class="entries">
+        <div class="empty-state">
+          Nothing here yet. After you write something and press <strong>“Write it down”</strong>, it will show up here.
+        </div>
+      </div>
+
+      <p class="tiny-note">
+        Tip: This doesn’t replace real support. If something keeps bothering you, it’s okay to talk to a real person about it – a friend, family member, or someone you trust.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const entryText = document.getElementById("entryText");
+    const moodSelect = document.getElementById("mood");
+    const saveBtn = document.getElementById("saveBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const entriesContainer = document.getElementById("entries");
+    const supportText = document.getElementById("supportText");
+
+    const SUPPORT_MESSAGES = [
+      "Thank you for typing that out. Even if nobody else sees it, your feelings are real and they matter.",
+      "You got through today. That’s not nothing. You’re allowed to be tired and still trying.",
+      "Whatever you’re feeling right now is valid. You don’t have to justify it to anyone.",
+      "You don’t have to fix the entire situation tonight. Tiny steps still count.",
+      "You’re not weird or broken for feeling like this. Many people would understand more than you think.",
+      "If all you did today was make it to this moment and write this, that’s still progress.",
+      "You deserve kindness, including from yourself. Try to talk to yourself like you would to a close friend.",
+      "It’s okay not to have the right words. You showed up. That matters."
+    ];
+
+    function loadEntries() {
+      try {
+        const raw = localStorage.getItem("writeItOutEntries");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        console.error("Error loading entries", e);
+        return [];
+      }
+    }
+
+    function saveEntries(entries) {
+      try {
+        localStorage.setItem("writeItOutEntries", JSON.stringify(entries));
+      } catch (e) {
+        console.error("Error saving entries", e);
+      }
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "Unknown time";
+
+      const options = {
+        weekday: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        day: "2-digit",
+        month: "short"
+      };
+      return date.toLocaleString(undefined, options);
+    }
+
+    function renderEntries() {
+      const entries = loadEntries();
+      entriesContainer.innerHTML = "";
+
+      if (entries.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.innerHTML =
+          'Nothing here yet. After you write something and press <strong>“Write it down”</strong>, it will show up here.';
+        entriesContainer.appendChild(empty);
+        return;
+      }
+
+      entries.forEach((entry) => {
+        const div = document.createElement("div");
+        div.className = "entry";
+
+        const header = document.createElement("div");
+        header.className = "entry-header";
+
+        const dateEl = document.createElement("div");
+        dateEl.className = "entry-date";
+        dateEl.textContent = formatDate(entry.timestamp);
+
+        header.appendChild(dateEl);
+
+        if (entry.mood) {
+          const tag = document.createElement("div");
+          tag.className = "entry-tag";
+          tag.textContent = entry.mood;
+          header.appendChild(tag);
+        }
+
+        const textEl = document.createElement("div");
+        textEl.className = "entry-text";
+        textEl.textContent = entry.text;
+
+        div.appendChild(header);
+        div.appendChild(textEl);
+        entriesContainer.appendChild(div);
+      });
+    }
+
+    function setRandomSupportMessage() {
+      const msg =
+        SUPPORT_MESSAGES[Math.floor(Math.random() * SUPPORT_MESSAGES.length)];
+      supportText.textContent = msg;
+    }
+
+    saveBtn.addEventListener("click", () => {
+      const text = entryText.value.trim();
+      const mood = moodSelect.value;
+
+      if (!text) {
+        // If they click with no text, just gently refresh the message instead of yelling at them
+        setRandomSupportMessage();
+        return;
+      }
+
+      const entries = loadEntries();
+      const newEntry = {
+        text,
+        mood,
+        timestamp: new Date().toISOString()
+      };
+
+      // newest first
+      entries.unshift(newEntry);
+      saveEntries(entries);
+      renderEntries();
+      setRandomSupportMessage();
+
+      entryText.value = "";
+      // keep mood as-is, or reset it if you prefer:
+      // moodSelect.value = "";
+
+      entryText.focus();
+    });
+
+    clearBtn.addEventListener("click", () => {
+      const confirmClear = confirm(
+        "Clear all saved entries on this device? This can’t be undone."
+      );
+      if (!confirmClear) return;
+
+      saveEntries([]);
+      renderEntries();
+      setRandomSupportMessage();
+    });
+
+    // Allow pressing Ctrl+Enter / Cmd+Enter to save
+    entryText.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        e.preventDefault();
+        saveBtn.click();
+      }
+    });
+
+    renderEntries();
+  </script>
+</body>
+</html>
